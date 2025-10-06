@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: pg-local
+    environment:
+      POSTGRES_DB: printing_pulse
+      POSTGRES_USER: printing_pulse
+      POSTGRES_PASSWORD: localdev
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U printing_pulse"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - appnet
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: printing-pulse
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: printing_pulse
+      DB_USER: printing_pulse
+      DB_PASSWORD: localdev
+      TZ: Asia/Seoul
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - "8080"
+    networks:
+      - appnet
+      - nginx-network
+
+networks:
+  appnet:
+    driver: bridge
+  nginx-network:
+    external: true
+    name: nginx-network
+
+volumes:
+  pgdata:

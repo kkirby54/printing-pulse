@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/printing_pulse
+    driver-class-name: org.postgresql.Driver
+    username: printing_pulse
+    password: localdev
+  jpa:
+    hibernate:
+      ddl-auto: update  # 개발 편의상 update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc.lob.non_contextual_creation: true
+  h2:
+    console:
+      enabled: false  # PostgreSQL 사용 시 H2 콘솔 비활성화
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.springframework.web: info
+    com.minhub.printing_pulse: debug
