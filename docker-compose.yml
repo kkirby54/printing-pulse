@@ -41,6 +41,7 @@ services:
 networks:
   appnet:
     driver: bridge
+    name: appnet
   nginx-network:
     external: true
     name: nginx-network
